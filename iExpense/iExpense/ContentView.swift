@@ -9,7 +9,8 @@ import Observation
 import SwiftUI
 
 //Represents a single expense
-struct ExpenseItem {
+struct ExpenseItem: Identifiable {
+    let id = UUID()
     let name: String
     let type: String
     let amount: Double
@@ -28,7 +29,7 @@ struct ContentView: View {
         NavigationStack {
             List {
                 //"id: \.name" -> identify each expenses uniquely by it's name
-                ForEach(expenses.items, id: \.name) { item in
+                ForEach(expenses.items) { item in
                     Text(item.name)
                 }
                 .onDelete(perform: removeItems)
