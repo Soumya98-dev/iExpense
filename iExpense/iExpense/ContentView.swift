@@ -27,6 +27,7 @@ class Expenses {
         }
     }
     
+    //To show the values from UserDefaults
     init(){
         if let savedItems = UserDefaults.standard.data(forKey: "Items"){
             if let decodedItems = try? JSONDecoder().decode([ExpenseItem].self, from: savedItems){
@@ -59,6 +60,11 @@ struct ContentView: View {
                         }
                         Spacer()
                         Text(item.amount, format: .currency(code: "USD"))
+                            .padding(8)
+                            .foregroundColor(textColor(for: item.amount))
+                            .font(item.amount > 100 ? .headline:.body)
+                            .background(item.amount > 100 ? Color.red.opacity(0.2) : Color.clear)
+                            .clipShape(Capsule())
                     }
                     
                 }
@@ -78,6 +84,18 @@ struct ContentView: View {
     
     func removeItems(at offsets: IndexSet){
         expenses.items.remove(atOffsets: offsets)
+    }
+    
+    private func textColor(for amount: Double) -> Color{
+        if amount < 10{
+            return .green
+        }
+        else if amount < 100{
+            return .orange
+        }
+        else{
+            return .red
+        }
     }
 }
 
