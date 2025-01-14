@@ -17,7 +17,9 @@ iExpense is a SwiftUI-based expense tracking app that allows users to manage the
 
 ## Screenshots
 
-Add screenshots here once the app is fully developed.
+![alt text](image.png)
+
+![alt text](image-1.png)
 
 ## Technologies Used
 
@@ -92,7 +94,3 @@ For any questions or suggestions, feel free to contact [Soumyadeep Chatterjee](m
 ---
 
 Thank you for using iExpense!
-
-![alt text](image.png)
-
-![alt text](image-1.png)
