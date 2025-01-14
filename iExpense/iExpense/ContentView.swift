@@ -52,7 +52,11 @@ struct ContentView: View {
     
     @State private var totalBudgetText: String = ""
     
-    @State private var totalBudget: Double = 0.0
+    @State private var totalBudget: Double = 0.0 {
+        didSet {
+            UserDefaults.standard.set(totalBudget, forKey: "TotalBudget")
+        }
+    }
     
     
     var body: some View{
@@ -112,6 +116,12 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showingAddExpense) {
                 AddView(expenses: expenses)
+            }
+            .onAppear {
+                if let savedBudget = UserDefaults.standard.value(forKey: "TotalBudget") as? Double {
+                    totalBudget = savedBudget
+                    totalBudgetText = String(format: "%.2f", savedBudget)
+                }
             }
         }
     }
