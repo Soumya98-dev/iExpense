@@ -58,6 +58,12 @@ struct ContentView: View {
         }
     }
     
+    private var expenseSummary: [(type: String, total: Double)] {
+        let grouped = Dictionary(grouping: expenses.items, by: { $0.type })
+        return grouped.map { (type, items) in
+            (type: type, total: items.reduce(0) { $0 + $1.amount})
+        }
+    }
     
     var body: some View{
         NavigationStack {
@@ -114,12 +120,20 @@ struct ContentView: View {
             }
             .navigationTitle("iExpense")
             .toolbar {
-                Button {
-                    showingAddExpense = true
-                } label : {
-                    Label("Add Expense", systemImage: "plus")
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showingAddExpense = true
+                    } label : {
+                        Label("Add Expense", systemImage: "plus")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink(destination: ExpenseChartView(expenseSummary: expenseSummary)) {
+                        Label("View Chart", systemImage: "chart.pie.fill")
+                    }
                 }
             }
+            
             .sheet(isPresented: $showingAddExpense) {
                 AddView(expenses: expenses)
             }
