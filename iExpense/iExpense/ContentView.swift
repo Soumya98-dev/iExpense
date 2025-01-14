@@ -79,11 +79,17 @@ struct ContentView: View {
                 }
                 .padding()
                 
-                //Displaying remaining budget
-                Text("Remaining: \(remainingAmount(), format: .currency(code: Locale.current.currency?.identifier ?? "USD"))")
-                    .font(.largeTitle)
-                    .foregroundColor(remainingAmount() < 0 ? .red: .green)
-                    .padding(.bottom)
+                HStack {
+                    Image(systemName: remainingAmount() < 0 ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
+                        .foregroundColor(remainingAmount() < 0 ? .red : .green)
+                    //Displaying remaining budget
+                    Text("Remaining: \(remainingAmount(), format: .currency(code: Locale.current.currency?.identifier ?? "USD"))")
+                        .font(.title2)
+                        
+                }
+                .cornerRadius(10)
+                .foregroundColor(remainingAmount() < 0 ? Color.red.opacity(0.8): Color.green.opacity(1.1))
+                
                 
                 List {
                     //Section for personal expenses
