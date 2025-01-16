@@ -14,12 +14,18 @@ iExpense is a SwiftUI-based expense tracking app that allows users to manage the
   - Color-coded expense amounts: green for low amounts, orange for medium, and red for high expenses.
 - **Dynamic List Views**: View categorized expenses in a user-friendly list format.
 - **Delete Expenses**: Swipe to delete expenses in either category.
+- **Chart View**: Expenses breakdown through a donut chart
+- **Export Expenses**: Functionality to export the expenses to a csv file
 
 ## Screenshots
 
-![alt text](image.png)
+![alt text](image-2.png)
 
-![alt text](image-1.png)
+![alt text](image-3.png)
+
+![alt text](image-4.png)
+
+![alt text](image-5.png)
 
 ## Technologies Used
 
@@ -28,6 +34,7 @@ iExpense is a SwiftUI-based expense tracking app that allows users to manage the
 - **Observation Framework**
 - **UserDefaults** for data persistence
 - **Foundation** for data encoding and decoding
+- **Charts** for expenses breakdown
 
 ## Requirements
 
@@ -79,7 +86,6 @@ iExpense is a SwiftUI-based expense tracking app that allows users to manage the
 ## Future Enhancements
 
 - Add support for recurring expenses.
-- Integrate chart-based analytics for expense trends.
 - Enable syncing across multiple devices using iCloud.
 - Support additional currencies.
 
