@@ -58,6 +58,8 @@ struct ContentView: View {
         }
     }
     
+    @State private var csvFileURL: URL? = nil
+    
     private var expenseSummary: [(type: String, total: Double)] {
         let grouped = Dictionary(grouping: expenses.items, by: { $0.type })
         return grouped.map { (type, items) in
@@ -117,6 +119,24 @@ struct ContentView: View {
                         }
                     }
                 }
+                
+                if let url = csvFileURL {
+                    ShareLink(item: url) {
+                        Text("Export Expenses")
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                    }
+                    .padding()
+                } else {
+                    Button(action: {
+                        csvFileURL = saveCSVToFile()
+                    }) {
+                        Text("Export Expenses")
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                    }
+                    .padding()
+                }
             }
             .navigationTitle("iExpense")
             .toolbar {
@@ -128,7 +148,7 @@ struct ContentView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: ExpenseChartView(expenseSummary: expenseSummary)) {
+                    NavigationLink(destination: ExpenseChartView(expenseSummary: expenseSummary, totalExpense: totalBudget)) {
                         Label("View Chart", systemImage: "chart.pie.fill")
                     }
                 }
@@ -195,6 +215,30 @@ struct ContentView: View {
     private func remainingAmount() -> Double {
         totalBudget - expenses.items.reduce(0) { (currentTotal, item) in
             currentTotal + item.amount
+        }
+    }
+    
+    private func generateCSV() -> String {
+        var csvString = "Name, Type, Amount\n"
+        
+        for item in expenses.items {
+            csvString += "\(item.name), \(item.type), \(item.amount)\n"
+        }
+        
+        return csvString
+    }
+    
+    private func saveCSVToFile() -> URL? {
+        let csvString = generateCSV()
+        let fileName = "Expenses.csv"
+        let filePath = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+        
+        do {
+            try csvString.write(to: filePath, atomically: true, encoding: .utf8)
+            return filePath
+        } catch{
+          print("Error saving csv file: \(error)")
+            return nil
         }
     }
 }
