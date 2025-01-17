@@ -60,6 +60,8 @@ struct ContentView: View {
     
     @State private var csvFileURL: URL? = nil
     
+    @FocusState private var isFocused: Bool
+    
     private var expenseSummary: [(type: String, total: Double)] {
         let grouped = Dictionary(grouping: expenses.items, by: { $0.type })
         return grouped.map { (type, items) in
@@ -77,6 +79,7 @@ struct ContentView: View {
                     TextField("Total Budget", text: $totalBudgetText)
                         .keyboardType(.decimalPad)
                         .textFieldStyle(.roundedBorder)
+                        .focused($isFocused)
                         .onChange(of: totalBudgetText){ oldValue, newValue in
                             if let value = Double(newValue) {
                                 totalBudget = value
@@ -84,6 +87,10 @@ struct ContentView: View {
                                 totalBudget = 0.0
                             }
                         }
+                    
+                    Button("Submit") {
+                        isFocused = false
+                    }
                 }
                 .padding()
                 
@@ -129,9 +136,14 @@ struct ContentView: View {
                     .padding()
                 } else {
                     Button(action: {
-                        csvFileURL = saveCSVToFile()
+                        if let url = saveCSVToFile() {
+                            csvFileURL = url
+                        } else {
+                            print("Failed to generate csv file")
+                        }
+                        
                     }) {
-                        Text("Export Expenses")
+                        Text("Generate CSV and Export")
                             .font(.headline)
                             .foregroundColor(.blue)
                     }
@@ -225,6 +237,7 @@ struct ContentView: View {
             csvString += "\(item.name), \(item.type), \(item.amount)\n"
         }
         
+        print("Genrated csv: \n\(csvString)")
         return csvString
     }
     
@@ -235,7 +248,12 @@ struct ContentView: View {
         
         do {
             try csvString.write(to: filePath, atomically: true, encoding: .utf8)
-            return filePath
+            print("CSV saved at: \(filePath)")
+            if FileManager.default.fileExists(atPath: filePath.path) {
+                return filePath
+            } else {
+                return nil
+            }
         } catch{
           print("Error saving csv file: \(error)")
             return nil
