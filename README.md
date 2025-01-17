@@ -19,7 +19,7 @@ iExpense is a SwiftUI-based expense tracking app that allows users to manage the
 
 ## Screenshots
 
-![alt text](image-2.png)
+![alt text](image-6.png)
 
 ![alt text](image-3.png)
 
