@@ -7,6 +7,9 @@
 
 import Observation
 import SwiftUI
+import FirebaseCore
+import Firebase
+import FirebaseAuth
 
 //Represents a single expense
 struct ExpenseItem: Identifiable, Codable {
@@ -261,6 +264,72 @@ struct ContentView: View {
     }
 }
 
+
+//Apple Sign In
+struct AuthView: View {
+    @State private var isSignedIn = false
+    
+    var body: some View {
+        VStack {
+            if isSignedIn {
+                Text("Welcome!")
+                Button("Sign out") {
+                    signOut()
+                }
+            } else {
+                Button("Sign In with Apple") {
+                    signInWithApple()
+                }
+            }
+        }
+    }
+    
+    func signInWithApple() {
+        let provider = OAuthProvider(providerID: "apple.com")
+        provider.getCredentialWith(nil) { credential, error in
+            if let credential = credential {
+                Auth.auth().signIn(with: credential) { result, error in
+                    if let error = error {
+                        print("Sign in failed! \(error.localizedDescription)")
+                    } else {
+                        isSignedIn = true
+                    }
+                }
+            }
+        }
+    }
+    
+    func signOut() {
+        try? Auth.auth().SignedOut()
+        isSignedIn = false
+    }
+}
+
 #Preview {
     ContentView()
+}
+
+//Firebase functions
+class AppDelegate: NSObject, UIApplicationDelegate {
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    FirebaseApp.configure()
+
+    return true
+  }
+}
+
+@main
+struct YourApp: App {
+  // register app delegate for Firebase setup
+  @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+
+
+  var body: some Scene {
+    WindowGroup {
+      NavigationView {
+        ContentView()
+      }
+    }
+  }
 }
